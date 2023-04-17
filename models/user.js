@@ -16,13 +16,13 @@ const userSchema = new mongoose.Schema({
     validate: {
       validator: (value) => isEmail(value),
       message: 'Неправильный формат почты',
-    }
+    },
   },
   password: {
     type: String,
     required: true,
     select: false,
-  }
+  },
 });
 
 module.exports = mongoose.model('user', userSchema);

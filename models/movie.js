@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const isURL = require('validator/lib/isURL');
 
-const isURL_options = { protocols: ['http', 'https'] };
+const isUrlOptions = { protocols: ['http', 'https'] };
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -28,25 +28,25 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (value) => isURL(value, isURL_options),
+      validator: (value) => isURL(value, isUrlOptions),
       message: 'Неправильный формат ссылки',
-    }
+    },
   },
   trailerLink: {
     type: String,
     required: true,
     validate: {
-      validator: (value) => isURL(value, isURL_options),
+      validator: (value) => isURL(value, isUrlOptions),
       message: 'Неправильный формат ссылки',
-    }
+    },
   },
   thumbnail: {
     type: String,
     required: true,
     validate: {
-      validator: (value) => isURL(value, isURL_options),
+      validator: (value) => isURL(value, isUrlOptions),
       message: 'Неправильный формат ссылки',
-    }
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

@@ -8,7 +8,6 @@ const app = express();
 async function main() {
   await mongoose.connect(CONNECT);
   await app.listen(PORT);
-  console.log(`Сервер запущен на ${PORT} порту`);
 }
 
 main();
