@@ -16,3 +16,5 @@ userRoutes.patch(
   }),
   updateUser,
 );
+
+module.exports = userRoutes;
