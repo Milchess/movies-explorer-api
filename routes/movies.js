@@ -13,8 +13,9 @@ movieRoutes.post(
   '/movies',
   celebrate({
     body: Joi.object().keys({
-      movieId: Joi.string().length(24).hex().required(),
+      movieId: Joi.string().required(),
       country: Joi.string().required(),
+      duration: Joi.number().required(),
       director: Joi.string().required(),
       year: Joi.string().required(),
       description: Joi.string().required(),
@@ -29,10 +30,10 @@ movieRoutes.post(
 );
 
 movieRoutes.delete(
-  '/movies/:_Id',
+  '/movies/:_id',
   celebrate({
     params: Joi.object().keys({
-      _Id: Joi.string().length(24).hex().required(),
+      _id: Joi.string().length(24).hex().required(),
     }),
   }),
   deleteMovie,

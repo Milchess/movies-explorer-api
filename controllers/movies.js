@@ -29,11 +29,11 @@ const createMovie = async (req, res, next) => {
 
 const deleteMovie = async (req, res, next) => {
   try {
-    const movie = await Movie.findById(req.params.movieId);
+    const movie = await Movie.findById(req.params._id);
     if (!movie) {
       next(new NotFound('Фильм с указанным id не найдена'));
     } else if (movie.owner.equals(req.user._id)) {
-      await movie.remove();
+      await Movie.findByIdAndDelete(movie._id);
       res.send({ message: 'Фильм удален' });
     } else {
       next(new Forbidden('Нельзя удалять фильм созданный не вами'));

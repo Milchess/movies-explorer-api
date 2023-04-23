@@ -5,17 +5,18 @@ const NotFound = require('../errors/notFound');
 const BadRequest = require('../errors/badRequest');
 const Authorization = require('../errors/authorization');
 const Conflict = require('../errors/conflict');
-require('dotenv').config();
-
-const { NODE_ENV, JWT_SECRET = 'super-strong-secret' } = process.env;
+const { JWT_SECRET } = require('../config');
 
 const getUser = async (req, res, next) => {
   try {
-    const user = await User.findById({ _id: req.params.userId });
+    const user = await User.findById(req.user._id);
     if (!user) {
       next(new NotFound('Пользователь с указанным id не найден'));
     } else {
-      res.send(user);
+      res.send({
+        email: user.email,
+        name: user.name,
+      });
     }
   } catch (err) {
     if (err.name === 'CastError') {
@@ -58,7 +59,7 @@ const login = async (req, res, next) => {
     if (isUserValid) {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'super-strong-secret',
+        JWT_SECRET,
         { expiresIn: '7d' },
       );
 

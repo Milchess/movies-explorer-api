@@ -2,27 +2,19 @@ const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const cors = require('cors');
+const { celebrate, Joi, errors } = require('celebrate');
 const userRoutes = require('./routes/users');
 const movieRoutes = require('./routes/movies');
-const rateLimit = require('express-rate-limit');
-const { celebrate, Joi, errors } = require('celebrate');
-require('dotenv').config();
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFound = require('./errors/notFound');
-const { regexUrl, allowedCors } = require('./constants');
+const { allowedCors } = require('./constants');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const { limiter } = require('./limiter');
+const { CONNECT, PORT } = require('./config');
 
-const { PORT = 3000, CONNECT = 'mongodb://0.0.0.0:27017/bitfilmsdb' } = process.env;
 const app = express();
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
-});
 
 app.disable('x-powered-by');
 app.use(limiter);
@@ -58,8 +50,6 @@ app.post(
       email: Joi.string().required().email(),
       password: Joi.string().required(),
       name: Joi.string().min(2).max(30),
-      about: Joi.string().min(2).max(30),
-      avatar: Joi.string().regex(regexUrl),
     }),
   }),
   createUser,
