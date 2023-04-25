@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const cors = require('cors');
-const { celebrate, Joi, errors } = require('celebrate');
+const { celebrate, errors } = require('celebrate');
 const userRoutes = require('./routes/users');
 const movieRoutes = require('./routes/movies');
 
@@ -13,14 +13,15 @@ const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const { limiter } = require('./limiter');
 const { CONNECT, PORT } = require('./config');
+const { loginValidation, createUserValidation } = require('./routes/validation');
 
 const app = express();
 
 app.disable('x-powered-by');
+app.use(requestLogger);
 app.use(limiter);
 app.use(helmet());
 app.use(express.json());
-app.use(requestLogger);
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -34,24 +35,13 @@ app.use(cors({
 
 app.post(
   '/signin',
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string().required().email(),
-      password: Joi.string().required(),
-    }),
-  }),
+  celebrate(loginValidation),
   login,
 );
 
 app.post(
   '/signup',
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string().required().email(),
-      password: Joi.string().required(),
-      name: Joi.string().min(2).max(30),
-    }),
-  }),
+  celebrate(createUserValidation),
   createUser,
 );
 

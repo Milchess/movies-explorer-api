@@ -56,7 +56,10 @@ const movieSchema = new mongoose.Schema({
   movieId: {
     type: Number,
     required: true,
-    unique: true,
+    validate: {
+      validator: (value) => Number.isInteger(value) && value >= 0,
+      message: 'Неправильный формат, здесь должен быть положительный номер',
+    },
   },
   nameRU: {
     type: String,

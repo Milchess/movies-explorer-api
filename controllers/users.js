@@ -41,6 +41,8 @@ const updateUser = async (req, res, next) => {
   } catch (err) {
     if (err.name === 'ValidationError') {
       next(new BadRequest('Переданы неккоректные данные'));
+    } else if (err.code === 11000) {
+      next(new Conflict('Данный почтовый адрес уже занят'));
     } else {
       next(err);
     }
@@ -93,7 +95,7 @@ const createUser = async (req, res, next) => {
     if (err.name === 'ValidationError') {
       next(new BadRequest('Переданы неккоректные данные'));
     } else if (err.code === 11000) {
-      next(new Conflict('Данный пользователь уже существует'));
+      next(new Conflict('Данный почтовый адрес уже занят'));
     } else {
       next(err);
     }
